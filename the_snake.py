@@ -39,14 +39,29 @@ pygame.display.set_caption('Змейка')
 clock = pygame.time.Clock()
 
 
-# Тут опишите все классы игры.
+def handle_keys(game_object):
+    """Функция обработки действий пользователя"""
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            raise SystemExit
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_UP and game_object.direction != DOWN:
+                game_object.next_direction = UP
+            elif event.key == pygame.K_DOWN and game_object.direction != UP:
+                game_object.next_direction = DOWN
+            elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:
+                game_object.next_direction = LEFT
+            elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
+                game_object.next_direction = RIGHT
+
+
 class GameObject:
     """Базовый класс, от которого наследуются другие игровые объекты"""
 
     position = (320, 240)
-    body_color = BOARD_BACKGROUND_COLOR
 
-    def __init__(self, body_color):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR):
         self.body_color = body_color
 
     def draw(self):
@@ -57,7 +72,7 @@ class GameObject:
 class Apple(GameObject):
     """Класс, описывающий яблоко и действия с ним"""
 
-    def __init__(self, body_color):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR):
         self.position = self.randomize_position()
         super().__init__(body_color)
 
@@ -79,7 +94,7 @@ class Snake(GameObject):
     position = (320, 240)
     body_color = SNAKE_COLOR
 
-    def __init__(self, body_color):
+    def __init__(self, body_color=BOARD_BACKGROUND_COLOR):
         self.length = 1
         self.positions = [self.position]
         self.direction = RIGHT
@@ -146,23 +161,6 @@ class Snake(GameObject):
         self.positions = [self.position]
         self.direction = RIGHT
         self.next_direction = None
-
-
-def handle_keys(game_object):
-    """Функция обработки действий пользователя"""
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            raise SystemExit
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP and game_object.direction != DOWN:
-                game_object.next_direction = UP
-            elif event.key == pygame.K_DOWN and game_object.direction != UP:
-                game_object.next_direction = DOWN
-            elif event.key == pygame.K_LEFT and game_object.direction != RIGHT:
-                game_object.next_direction = LEFT
-            elif event.key == pygame.K_RIGHT and game_object.direction != LEFT:
-                game_object.next_direction = RIGHT
 
 
 def main():
